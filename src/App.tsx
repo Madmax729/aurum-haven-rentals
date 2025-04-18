@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
+import PropertyDetails from "./pages/PropertyDetails";
+import BookingSummary from "./pages/BookingSummary";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +25,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/property/:id" element={<PropertyDetails />} />
+            <Route path="/booking/:id" element={<BookingSummary />} />
             {/* These routes will be implemented as the project grows */}
             <Route path="/explore" element={<NotFound />} />
             <Route path="/listing/:id" element={<NotFound />} />

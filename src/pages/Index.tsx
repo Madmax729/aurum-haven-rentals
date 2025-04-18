@@ -7,6 +7,7 @@ import CategoryShowcase from "@/components/home/CategoryShowcase";
 import Testimonials from "@/components/home/Testimonials";
 import DestinationSpotlight from "@/components/home/DestinationSpotlight";
 import CTASection from "@/components/home/CTASection";
+import PropertyMap from "@/components/Map";
 
 const Index = () => {
   return (
@@ -19,6 +20,7 @@ const Index = () => {
         <DestinationSpotlight />
         <Testimonials />
         <CTASection />
+        <PropertyMap />
       </main>
       <Footer />
     </div>
