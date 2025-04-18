@@ -1,11 +1,12 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Menu, X, Search, User, Home, Map, Heart, MessageSquare, Mail } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,14 +15,12 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <nav className="aurum-container flex justify-between items-center h-16">
-        {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <span className="text-xl font-bold text-primary">
             Aurum<span className="text-foreground">Escape</span>
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-1">
           <Button variant="ghost" asChild>
             <Link to="/explore" className="flex items-center gap-1.5">
@@ -41,15 +40,39 @@ const Navbar = () => {
               <span>Contact</span>
             </Link>
           </Button>
-          <Button variant="secondary" asChild>
-            <Link to="/login" className="ml-2">Log in</Link>
-          </Button>
-          <Button variant="default" asChild>
-            <Link to="/register">Sign up</Link>
-          </Button>
+          {user ? (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/favorites">
+                  <Heart className="w-4 h-4" />
+                </Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/messages">
+                  <MessageSquare className="w-4 h-4" />
+                </Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/profile">
+                  <User className="w-4 h-4" />
+                </Link>
+              </Button>
+              <Button variant="default" onClick={() => signOut()}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="secondary" asChild>
+                <Link to="/auth">Log in</Link>
+              </Button>
+              <Button variant="default" asChild>
+                <Link to="/auth">Sign up</Link>
+              </Button>
+            </>
+          )}
         </div>
 
-        {/* Mobile Menu Toggle */}
         <div className="md:hidden">
           <Button variant="ghost" size="icon" onClick={toggleMenu}>
             {isMenuOpen ? (
@@ -61,7 +84,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden absolute w-full bg-background border-b border-border animate-fade-in">
           <div className="aurum-container py-4 space-y-3">
@@ -103,10 +125,10 @@ const Navbar = () => {
             </Button>
             <div className="flex flex-col space-y-2 pt-2 border-t border-border">
               <Button variant="secondary" asChild>
-                <Link to="/login">Log in</Link>
+                <Link to="/auth">Log in</Link>
               </Button>
               <Button variant="default" asChild>
-                <Link to="/register">Sign up</Link>
+                <Link to="/auth">Sign up</Link>
               </Button>
             </div>
           </div>
