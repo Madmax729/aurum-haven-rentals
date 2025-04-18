@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Menu, X, Search, User, Home, Map, Heart, MessageSquare } from "lucide-react";
+import { Menu, X, Search, User, Home, Map, Heart, MessageSquare, Mail } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,8 +16,8 @@ const Navbar = () => {
       <nav className="aurum-container flex justify-between items-center h-16">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-aurum-gold">
-            Aurum<span className="text-aurum-navy">Escape</span>
+          <span className="text-xl font-bold text-primary">
+            Aurum<span className="text-foreground">Escape</span>
           </span>
         </Link>
 
@@ -33,6 +33,12 @@ const Navbar = () => {
             <Link to="/host" className="flex items-center gap-1.5">
               <Home className="w-4 h-4" />
               <span>Become a Host</span>
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link to="/contact" className="flex items-center gap-1.5">
+              <Mail className="w-4 h-4" />
+              <span>Contact</span>
             </Link>
           </Button>
           <Button variant="secondary" asChild>
@@ -69,6 +75,12 @@ const Navbar = () => {
               <Link to="/host" className="flex items-center gap-1.5">
                 <Home className="w-4 h-4" />
                 <span>Become a Host</span>
+              </Link>
+            </Button>
+            <Button variant="ghost" asChild className="w-full justify-start">
+              <Link to="/contact" className="flex items-center gap-1.5">
+                <Mail className="w-4 h-4" />
+                <span>Contact</span>
               </Link>
             </Button>
             <Button variant="ghost" asChild className="w-full justify-start">
