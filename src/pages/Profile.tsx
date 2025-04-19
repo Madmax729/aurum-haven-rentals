@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "@/components/layout/Navbar";
@@ -152,7 +151,7 @@ const Profile = () => {
         avatar_url: avatarUrl,
         bio: formData.bio,
         phone: formData.phone,
-        updated_at: new Date()
+        updated_at: new Date().toISOString()
       };
       
       const { error } = await supabase

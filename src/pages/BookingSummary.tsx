@@ -11,7 +11,7 @@ import { CalendarIcon, Check, Clock, MapPin, Printer, Share2, Download, Home as 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { supabase } from '@/integrations/supabase/client';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 
 const BookingSummary = () => {
   const { id } = useParams();
@@ -205,7 +205,7 @@ const BookingSummary = () => {
                   <h2 className="text-xl font-semibold mb-4">Booking QR Code</h2>
                   <div className="flex flex-col items-center">
                     <div className="bg-white p-4 rounded-lg mb-4">
-                      <QRCode 
+                      <QRCodeSVG 
                         value={getQRCodeData()}
                         size={180}
                         level="H"
