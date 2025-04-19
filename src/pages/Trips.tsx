@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from "@/components/layout/Navbar";
@@ -20,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from '@/components/ui/separator';
 import TripQRCode from '@/components/trips/TripQRCode';
 import PropertyMapButton from '@/components/PropertyMapButton';
+import { useToast } from "@/hooks/use-toast";
 
 interface Booking {
   id: string;

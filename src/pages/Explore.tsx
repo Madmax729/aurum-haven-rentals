@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "@/components/layout/Navbar";
@@ -10,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Filter, MapPin } from 'lucide-react';
 import { PropertyCardProps } from '@/components/listings/PropertyCard';
 import PropertyMapButton from '@/components/PropertyMapButton';
+import { useToast } from "@/hooks/use-toast";
 
 const Explore = () => {
   const [properties, setProperties] = useState<PropertyCardProps[]>([]);
