@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
-import { CalendarIcon, Check, Clock, MapPin, Printer, Share2, Download } from 'lucide-react';
+import { CalendarIcon, Check, Clock, MapPin, Printer, Share2, Download, Home as HomeIcon } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { supabase } from '@/integrations/supabase/client';
@@ -136,7 +136,7 @@ const BookingSummary = () => {
                       />
                     ) : (
                       <div className="w-24 h-24 bg-muted rounded-md mr-4 flex items-center justify-center">
-                        <Home className="h-10 w-10 text-muted-foreground" />
+                        <HomeIcon className="h-10 w-10 text-muted-foreground" />
                       </div>
                     )}
                     <div>
