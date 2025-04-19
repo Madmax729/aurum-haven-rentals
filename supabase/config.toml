@@ -5,15 +5,27 @@
 # Sets a custom migrations table name
 migrations_table = 'supabase_migrations'
 
-[tables."conversations"]
+[tables."properties"]
 primary_key = 'id'
 schema_name = 'public'
 
-[tables."messages"]
+[tables."profiles"]
 primary_key = 'id'
 schema_name = 'public'
 
-[tables."conversation_participants"]
+[tables."bookings"]
+primary_key = 'id'
+schema_name = 'public'
+
+[tables."favorites"]
+primary_key = 'id'
+schema_name = 'public'
+
+[tables."property_images"]
+primary_key = 'id'
+schema_name = 'public'
+
+[tables."reviews"]
 primary_key = 'id'
 schema_name = 'public'
 

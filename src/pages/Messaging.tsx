@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,7 +15,7 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
-import { Send, User } from 'lucide-react';
+import { Send, User, MessageSquare } from 'lucide-react';
 
 interface Conversation {
   id: string;
@@ -61,6 +60,11 @@ const Messaging = () => {
       return;
     }
 
+    // For now, we'll just show dummy data since the tables don't exist yet
+    setLoading(false);
+
+    // Comment out the real implementation temporarily
+    /*
     // Load user's conversations
     loadConversations();
 
@@ -84,29 +88,15 @@ const Messaging = () => {
     return () => {
       supabase.removeChannel(channel);
     };
+    */
   }, [user]);
 
-  useEffect(() => {
-    if (activeConversation) {
-      loadMessages(activeConversation.id);
-      markConversationAsRead(activeConversation.id);
-    }
-  }, [activeConversation]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  // Commenting out functions that depend on non-existing tables
+  /*
   const loadConversations = async () => {
     try {
       setLoading(true);
       
-      // This is a simplified query - in a real app, you would need a more complex query 
-      // to get conversations from both sides (as sender and recipient)
       const { data, error } = await supabase
         .from('conversations')
         .select(`
@@ -282,6 +272,16 @@ const Messaging = () => {
       });
     }
   };
+  */
+
+  // Placeholder function for now
+  const sendMessage = () => {
+    toast({
+      title: "Feature Coming Soon",
+      description: "Messaging functionality will be available soon!",
+    });
+    setNewMessage('');
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -290,8 +290,8 @@ const Messaging = () => {
     }
   };
 
-  // For demo purposes, show a placeholder if no real data
-  const showDemoContent = conversations.length === 0 && !loading;
+  // For demo purposes, we'll just show a placeholder
+  const showDemoContent = true;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -332,44 +332,10 @@ const Messaging = () => {
                   </div>
                 ) : (
                   <div>
-                    {conversations.map((conversation) => (
-                      <div
-                        key={conversation.id}
-                        className={`p-4 border-b cursor-pointer hover:bg-muted/50 flex items-center justify-between ${
-                          activeConversation?.id === conversation.id ? 'bg-muted' : ''
-                        }`}
-                        onClick={() => setActiveConversation(conversation)}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="relative">
-                            {conversation.with_user_avatar ? (
-                              <img
-                                src={conversation.with_user_avatar}
-                                alt={conversation.with_user_name}
-                                className="w-10 h-10 rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <span className="text-primary font-medium">
-                                  {conversation.with_user_name.charAt(0)}
-                                </span>
-                              </div>
-                            )}
-                            {conversation.unread_count > 0 && (
-                              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                {conversation.unread_count}
-                              </span>
-                            )}
-                          </div>
-                          <div>
-                            <p className="font-medium">{conversation.with_user_name}</p>
-                            <p className="text-xs text-muted-foreground truncate max-w-[150px]">
-                              {conversation.property_title}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                    {/* This part would display the actual conversations when implemented */}
+                    <div className="p-6 text-center">
+                      <p>Your conversations will appear here</p>
+                    </div>
                   </div>
                 )}
               </ScrollArea>
@@ -377,98 +343,18 @@ const Messaging = () => {
           </Card>
           
           <Card className="md:col-span-2 h-full flex flex-col">
-            {activeConversation ? (
-              <>
-                <CardHeader className="px-6 py-4 border-b flex-shrink-0">
-                  <div className="flex items-center space-x-3">
-                    {activeConversation.with_user_avatar ? (
-                      <img
-                        src={activeConversation.with_user_avatar}
-                        alt={activeConversation.with_user_name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-primary font-medium">
-                          {activeConversation.with_user_name.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                    <div>
-                      <CardTitle className="text-lg">{activeConversation.with_user_name}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{activeConversation.property_title}</p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <ScrollArea className="flex-grow p-6">
-                  <div className="space-y-4">
-                    {messages.length === 0 ? (
-                      <div className="text-center py-12">
-                        <p className="text-muted-foreground">
-                          No messages yet. Say hello!
-                        </p>
-                      </div>
-                    ) : (
-                      messages.map((message) => {
-                        const isOwnMessage = message.sender_id === user?.id;
-                        return (
-                          <div
-                            key={message.id}
-                            className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div
-                              className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                                isOwnMessage
-                                  ? 'bg-primary text-primary-foreground'
-                                  : 'bg-muted'
-                              }`}
-                            >
-                              <p>{message.content}</p>
-                              <p
-                                className={`text-xs mt-1 ${
-                                  isOwnMessage ? 'text-primary-foreground/70' : 'text-muted-foreground'
-                                }`}
-                              >
-                                {format(new Date(message.created_at), 'p')}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                    <div ref={messagesEndRef} />
-                  </div>
-                </ScrollArea>
-                <div className="p-4 border-t mt-auto">
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      placeholder="Type your message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      className="flex-grow"
-                    />
-                    <Button 
-                      onClick={sendMessage} 
-                      disabled={!newMessage.trim()}
-                      size="icon"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center p-6">
-                  <User className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-xl font-medium mb-2">Select a conversation</h3>
-                  <p className="text-muted-foreground">
-                    Choose a conversation from the list to start messaging
-                  </p>
-                </div>
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center p-6">
+                <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-xl font-medium mb-2">Messaging Coming Soon</h3>
+                <p className="text-muted-foreground mb-4">
+                  The messaging functionality will be available soon. Stay tuned!
+                </p>
+                <Button onClick={() => navigate('/explore')}>
+                  Browse Properties
+                </Button>
               </div>
-            )}
+            </div>
           </Card>
         </div>
       </main>

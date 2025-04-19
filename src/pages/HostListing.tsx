@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -41,7 +40,7 @@ const HostListing = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'Apartment',
+    category: 'Apartment' as 'Apartment' | 'House' | 'Condo' | 'Villa' | 'Cabin' | 'Cottage',
     location: '',
     address: '',
     price_per_night: '',

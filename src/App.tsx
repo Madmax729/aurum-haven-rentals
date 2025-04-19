@@ -39,8 +39,6 @@ const App = () => (
             <Route path="/trips" element={<Trips />} />
             <Route path="/host" element={<HostListing />} />
             <Route path="/messages" element={<Messaging />} />
-            {/* These routes will be replaced as the project grows */}
-            <Route path="/listing/:id" element={<PropertyDetails />} />
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
