@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { format, differenceInDays } from 'date-fns';
 import { 
   CalendarIcon, 
@@ -19,6 +18,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from '@/components/ui/separator';
+import TripQRCode from '@/components/trips/TripQRCode';
+import PropertyMapButton from '@/components/PropertyMapButton';
 
 interface Booking {
   id: string;
@@ -80,7 +81,6 @@ const Trips = () => {
       
       if (error) throw error;
       
-      // Format the data
       const formattedBookings = data.map(booking => ({
         ...booking,
         property: booking.property,
@@ -110,7 +110,6 @@ const Trips = () => {
       
       if (error) throw error;
       
-      // Update local state
       setBookings(bookings.map(booking => 
         booking.id === bookingId 
           ? { ...booking, status: 'cancelled' } 
@@ -145,7 +144,6 @@ const Trips = () => {
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
-  // Filter bookings for different tabs
   const upcomingBookings = bookings.filter(booking => 
     (booking.status === 'confirmed' || booking.status === 'pending') && 
     new Date(booking.check_in_date) >= new Date()
@@ -209,7 +207,6 @@ const Trips = () => {
                 {upcomingBookings.length > 0 ? (
                   <div className="space-y-6">
                     {upcomingBookings.map(booking => {
-                      // Find primary image or use first image
                       const primaryImage = booking.property_images?.find(img => img.is_primary);
                       const firstImage = booking.property_images?.[0];
                       const imageUrl = primaryImage?.image_url || firstImage?.image_url;
@@ -296,6 +293,7 @@ const Trips = () => {
                                         Cancel
                                       </Button>
                                     )}
+                                    <TripQRCode booking={booking} />
                                     <Button asChild>
                                       <Link to={`/booking/${booking.id}`}>View details</Link>
                                     </Button>
@@ -326,7 +324,6 @@ const Trips = () => {
                 {pastBookings.length > 0 ? (
                   <div className="space-y-6">
                     {pastBookings.map(booking => {
-                      // Find primary image or use first image
                       const primaryImage = booking.property_images?.find(img => img.is_primary);
                       const firstImage = booking.property_images?.[0];
                       const imageUrl = primaryImage?.image_url || firstImage?.image_url;
@@ -387,9 +384,12 @@ const Trips = () => {
                                     <span className="text-muted-foreground">Total paid</span>
                                     <p className="text-xl font-semibold">${booking.total_price}</p>
                                   </div>
-                                  <Button asChild>
-                                    <Link to={`/booking/${booking.id}`}>View details</Link>
-                                  </Button>
+                                  <div className="flex gap-2 mt-4 sm:mt-0">
+                                    <TripQRCode booking={booking} />
+                                    <Button asChild>
+                                      <Link to={`/booking/${booking.id}`}>View details</Link>
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -416,7 +416,6 @@ const Trips = () => {
                 {cancelledBookings.length > 0 ? (
                   <div className="space-y-6">
                     {cancelledBookings.map(booking => {
-                      // Find primary image or use first image
                       const primaryImage = booking.property_images?.find(img => img.is_primary);
                       const firstImage = booking.property_images?.[0];
                       const imageUrl = primaryImage?.image_url || firstImage?.image_url;
@@ -513,6 +512,7 @@ const Trips = () => {
         </div>
       </main>
       <Footer />
+      <PropertyMapButton />
     </div>
   );
 };

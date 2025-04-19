@@ -34,3 +34,7 @@ create_buckets = true
 
 [storage.buckets."property_images"]
 public = true
+
+[storage.buckets."avatars"]
+public = true
+

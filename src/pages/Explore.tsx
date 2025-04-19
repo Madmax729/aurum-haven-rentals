@@ -1,15 +1,15 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import PropertyCard from '@/components/listings/PropertyCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter, MapPin } from 'lucide-react';
 import { PropertyCardProps } from '@/components/listings/PropertyCard';
+import PropertyMapButton from '@/components/PropertyMapButton';
 
 const Explore = () => {
   const [properties, setProperties] = useState<PropertyCardProps[]>([]);
@@ -39,9 +39,7 @@ const Explore = () => {
       
       if (error) throw error;
       
-      // Transform data to match PropertyCardProps
       const formattedProperties = data.map(property => {
-        // Find primary image or default to first image
         const primaryImage = property.property_images.find(img => img.is_primary);
         const firstImage = property.property_images[0];
         const imageUrl = primaryImage?.image_url || firstImage?.image_url;
@@ -51,10 +49,10 @@ const Explore = () => {
           title: property.title,
           location: property.location,
           price: property.price_per_night,
-          rating: 4.85, // Default rating until we implement reviews
+          rating: 4.85,
           image: imageUrl || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
           category: property.category,
-          isSuperHost: Math.random() > 0.5, // Random for now
+          isSuperHost: Math.random() > 0.5,
         };
       });
       
@@ -67,7 +65,6 @@ const Explore = () => {
         variant: "destructive",
       });
       
-      // Fallback to empty array
       setProperties([]);
     } finally {
       setLoading(false);
@@ -141,6 +138,7 @@ const Explore = () => {
         </section>
       </main>
       <Footer />
+      <PropertyMapButton />
     </div>
   );
 };
