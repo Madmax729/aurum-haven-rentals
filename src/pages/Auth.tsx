@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2 } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -29,9 +30,16 @@ const signupSchema = z.object({
 });
 
 const Auth = () => {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   // Login form
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -58,9 +66,8 @@ const Auth = () => {
     setLoading(true);
     try {
       await signIn(values.email, values.password);
-      toast.success("Successfully logged in!");
-      navigate("/");
     } catch (error: any) {
+      console.error("Login error:", error);
       toast.error(error.message || "Failed to login");
     } finally {
       setLoading(false);
@@ -74,7 +81,7 @@ const Auth = () => {
       if (values.avatar?.[0]) {
         const file = values.avatar[0];
         const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
+        const fileName = `${Date.now()}.${fileExt}`;
         const { error: uploadError, data } = await supabase.storage
           .from('avatars')
           .upload(fileName, file);
@@ -82,7 +89,9 @@ const Auth = () => {
         if (uploadError) {
           throw uploadError;
         }
-        avatarUrl = data.path;
+        
+        avatarUrl = `${fileName}`;
+        console.log("Avatar uploaded:", avatarUrl);
       }
 
       await signUp(values.email, values.password, {
@@ -92,8 +101,15 @@ const Auth = () => {
         avatar_url: avatarUrl,
       });
       
-      toast.success("Successfully signed up! Please check your email to verify your account.");
+      toast.success("Account created! Please check your email to confirm your registration.");
+      
+      // Switch to login tab after successful signup
+      setTimeout(() => {
+        document.querySelector('[data-state="inactive"][value="login"]')?.click();
+      }, 1500);
+      
     } catch (error: any) {
+      console.error("Signup error:", error);
       toast.error(error.message || "Failed to sign up");
     } finally {
       setLoading(false);
@@ -146,7 +162,7 @@ const Auth = () => {
                   />
 
                   <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Logging in..." : "Login"}
+                    {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging in...</> : "Login"}
                   </Button>
                 </form>
               </Form>
@@ -255,7 +271,7 @@ const Auth = () => {
                   />
 
                   <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Creating account..." : "Sign Up"}
+                    {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating account...</> : "Sign Up"}
                   </Button>
                 </form>
               </Form>

@@ -37,4 +37,3 @@ public = true
 
 [storage.buckets."avatars"]
 public = true
-
