@@ -1,1 +1,24 @@
-project_id = "xqngcmaypwopmvopvmpe"
+
+# This file is used to configure the Supabase CLI
+
+[migrations]
+# Sets a custom migrations table name
+migrations_table = 'supabase_migrations'
+
+[tables."conversations"]
+primary_key = 'id'
+schema_name = 'public'
+
+[tables."messages"]
+primary_key = 'id'
+schema_name = 'public'
+
+[tables."conversation_participants"]
+primary_key = 'id'
+schema_name = 'public'
+
+[storage]
+create_buckets = true
+
+[storage.buckets."property_images"]
+public = true

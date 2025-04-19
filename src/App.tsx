@@ -15,6 +15,8 @@ import BookingSummary from "./pages/BookingSummary";
 import Wishlist from "./pages/Wishlist";
 import Profile from "./pages/Profile";
 import Trips from "./pages/Trips";
+import HostListing from "./pages/HostListing";
+import Messaging from "./pages/Messaging";
 
 const queryClient = new QueryClient();
 
@@ -35,10 +37,10 @@ const App = () => (
             <Route path="/favorites" element={<Wishlist />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/trips" element={<Trips />} />
+            <Route path="/host" element={<HostListing />} />
+            <Route path="/messages" element={<Messaging />} />
             {/* These routes will be replaced as the project grows */}
             <Route path="/listing/:id" element={<PropertyDetails />} />
-            <Route path="/host" element={<NotFound />} />
-            <Route path="/messages" element={<NotFound />} />
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>

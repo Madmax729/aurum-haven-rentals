@@ -1,9 +1,11 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Search, User, Home, Map, Heart, MessageSquare, Mail, Calendar } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X, Search, User, Home, Map, Heart, MessageSquare, Mail, Calendar, Luggage, Building, UserCircle, LogOut, LogIn, UserPlus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, Avatar, AvatarImage, AvatarFallback } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -165,6 +167,267 @@ const Navbar = () => {
         </div>
       )}
     </header>
+  );
+};
+
+const MobileNav = () => {
+  const { user, signOut } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        onClick={() => setIsOpen(true)}
+      >
+        <Menu />
+      </Button>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+          <SheetHeader className="pb-4">
+            <SheetTitle>Menu</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col space-y-3 mt-4">
+            <Button
+              variant="ghost"
+              className="justify-start"
+              onClick={() => {
+                setIsOpen(false);
+                navigate("/");
+              }}
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Home
+            </Button>
+            <Button
+              variant="ghost"
+              className="justify-start"
+              onClick={() => {
+                setIsOpen(false);
+                navigate("/explore");
+              }}
+            >
+              <Search className="mr-2 h-4 w-4" />
+              Explore
+            </Button>
+            <Button
+              variant="ghost"
+              className="justify-start"
+              onClick={() => {
+                setIsOpen(false);
+                navigate("/favorites");
+              }}
+            >
+              <Heart className="mr-2 h-4 w-4" />
+              Wishlist
+            </Button>
+            {user && (
+              <>
+                <Button
+                  variant="ghost"
+                  className="justify-start"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate("/trips");
+                  }}
+                >
+                  <Luggage className="mr-2 h-4 w-4" />
+                  Trips
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate("/messages");
+                  }}
+                >
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Messages
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate("/host");
+                  }}
+                >
+                  <Building className="mr-2 h-4 w-4" />
+                  Become a Host
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate("/profile");
+                  }}
+                >
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  Profile
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start"
+                  onClick={() => {
+                    setIsOpen(false);
+                    signOut();
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              </>
+            )}
+            {!user && (
+              <Button
+                variant="ghost"
+                className="justify-start"
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate("/auth");
+                }}
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Sign in
+              </Button>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+};
+
+const DesktopNav = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  return (
+    <div className="hidden md:flex md:items-center md:justify-between w-full">
+      <Link
+        to="/"
+        className="text-2xl font-bold text-primary flex items-center space-x-2"
+      >
+        <Home className="h-6 w-6" />
+        <span>Aurum</span>
+      </Link>
+
+      <div className="relative hidden md:block mx-4 lg:mx-6 xl:mx-10 flex-grow max-w-md">
+        <div className="flex items-center border rounded-full bg-background px-3 py-2 shadow-sm hover:shadow-md transition">
+          <Button
+            variant="ghost"
+            className="text-base font-medium px-2 rounded-full h-auto hover:bg-transparent hover:text-current"
+            onClick={() => navigate("/explore")}
+          >
+            Explore
+          </Button>
+          <Separator orientation="vertical" className="h-6 mx-2" />
+          <Button
+            variant="ghost"
+            className="text-base font-medium px-2 rounded-full h-auto hover:bg-transparent hover:text-current"
+            onClick={() => navigate("/explore")}
+          >
+            Anywhere
+          </Button>
+          <Separator orientation="vertical" className="h-6 mx-2" />
+          <Button
+            variant="ghost"
+            className="text-base font-medium px-2 rounded-full h-auto hover:bg-transparent hover:text-current"
+            onClick={() => navigate("/explore")}
+          >
+            Any week
+          </Button>
+          <Button size="icon" variant="ghost" className="rounded-full ml-auto">
+            <Search />
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-1">
+        <Link to="/host">
+          <Button variant="ghost" className="font-medium">
+            Become a Host
+          </Button>
+        </Link>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full border-muted-foreground/20"
+            >
+              <Avatar>
+                {user?.user_metadata?.avatar_url ? (
+                  <AvatarImage src={user.user_metadata.avatar_url} />
+                ) : (
+                  <AvatarFallback>
+                    {user?.user_metadata?.first_name?.[0] ||
+                      user?.email?.[0]?.toUpperCase() || (
+                        <User className="h-4 w-4" />
+                      )}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            {user ? (
+              <>
+                <DropdownMenuLabel>
+                  {user.user_metadata?.first_name
+                    ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+                    : user.email}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/favorites")}>
+                  <Heart className="mr-2 h-4 w-4" />
+                  <span>Wishlist</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/trips")}>
+                  <Luggage className="mr-2 h-4 w-4" />
+                  <span>Trips</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/messages")}>
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  <span>Messages</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/host")}>
+                  <Building className="mr-2 h-4 w-4" />
+                  <span>Host Dashboard</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </>
+            ) : (
+              <>
+                <DropdownMenuItem onClick={() => navigate("/auth")}>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  <span>Log in</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/auth")}>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  <span>Sign up</span>
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
   );
 };
 
