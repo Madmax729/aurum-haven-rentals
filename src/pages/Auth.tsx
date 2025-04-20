@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -32,16 +31,15 @@ const signupSchema = z.object({
 const Auth = () => {
   const { signIn, signUp, user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const navigate = useNavigate();
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) {
       navigate("/");
     }
   }, [user, navigate]);
 
-  // Login form
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -50,7 +48,6 @@ const Auth = () => {
     },
   });
 
-  // Signup form
   const signupForm = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -103,10 +100,7 @@ const Auth = () => {
       
       toast.success("Account created! Please check your email to confirm your registration.");
       
-      // Switch to login tab after successful signup
-      setTimeout(() => {
-        document.querySelector('[data-state="inactive"][value="login"]')?.click();
-      }, 1500);
+      setActiveTab("login");
       
     } catch (error: any) {
       console.error("Signup error:", error);
@@ -124,7 +118,7 @@ const Auth = () => {
           <CardDescription>Login or create an account to get started</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "login" | "signup")} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
